@@ -14,9 +14,8 @@ export default class ImageGallerty extends Component {
   state = {
     data: [],
     loading: false,
-    loadMore: false,
-    page: 1,
     haveMore: false,
+    page: 1,
   };
 
   clearData = () => {
@@ -83,4 +82,5 @@ export default class ImageGallerty extends Component {
 
 ImageGallerty.propTypes = {
   searchName: PropTypes.string.isRequired,
+  // page: PropTypes.string.isRequired,
 };
