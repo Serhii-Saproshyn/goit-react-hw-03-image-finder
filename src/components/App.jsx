@@ -15,8 +15,8 @@ export class App extends Component {
     searchName: '',
     loading: false,
     data: [],
-    haveMore: false,
     page: 1,
+    totalImages: 0,
   };
 
   clearData = () => {
@@ -40,6 +40,11 @@ export class App extends Component {
       const response = await axios.get(
         `${BASE_URL}?q=${this.state.searchName}&page=${this.state.page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
       );
+      const totalHits = await response.data.totalHits;
+
+      this.setState({
+        totalImages: totalHits,
+      });
       if (response.data.hits.length < 12 && response.data.hits.length > 0) {
         toast.info('You have seen all the pictures');
       }
@@ -49,7 +54,6 @@ export class App extends Component {
       } else {
         this.setState(prevState => ({
           data: [...prevState.data, ...response.data.hits],
-          haveMore: response.data.hits.length === 12,
         }));
       }
       this.setState({ loading: false });
@@ -61,13 +65,15 @@ export class App extends Component {
   };
 
   render() {
-    const { data, loading, haveMore } = this.state;
+    const { data, loading, totalImages } = this.state;
     return (
       <>
         <Searchbar onSubmit={this.handleFormSubmit} />
         {loading && <Loader />}
         {data.length !== 0 && <ImageGallerty data={data} />}
-        {haveMore && <Button onClick={this.loadMore} />}
+        {data.length !== 0 && data.length < totalImages && (
+          <Button onClick={this.loadMore} />
+        )}
         <ToastContainer autoClose={3000} theme="colored" />
       </>
     );
