@@ -53,11 +53,22 @@ export class App extends Component {
         this.setState({ loadMore: false });
       } else {
         this.setState(prevState => ({
-          data: [...prevState.data, ...response.data.hits],
+          data: [
+            ...prevState.data,
+            ...this.normalaziedData(response.data.hits),
+          ],
         }));
       }
       this.setState({ loading: false });
     }
+  }
+  normalaziedData(arr) {
+    return arr.map(({ id, tags, webformatURL, largeImageURL }) => ({
+      id,
+      tags,
+      webformatURL,
+      largeImageURL,
+    }));
   }
 
   handleFormSubmit = searchName => {
